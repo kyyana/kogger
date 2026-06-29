@@ -1,0 +1,15 @@
+# Gradle
+.gradle/
+build/
+
+# Kotlin
+.kotlin/
+
+# IntelliJ IDEA
+.idea/
+
+# VSCode
+.vscode/
+
+# Mac OS
+.DS_Store
