@@ -25,7 +25,7 @@ mavenPublishing {
     publishToMavenCentral()
     signAllPublications()
 
-    coordinates(group.toString(), "kogger", version.toString())
+    coordinates("com.thelipe7", "kogger", version.toString())
 
     pom {
         name = "kogger"
