@@ -1,6 +1,6 @@
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.4.0-7F52FF?logo=kotlin&logoColor=white)](https://kotlinlang.org)
 [![Platform](https://img.shields.io/badge/platform-Kotlin%2FNative-lightgray?logo=kotlin&logoColor=white)](https://kotlinlang.org/docs/native-overview.html)
-[![Maven Central](https://img.shields.io/maven-central/v/com.thelipe7/kogger)](https://central.sonatype.com/artifact/com.thelipe7/kogger)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.kyyana/kogger)](https://central.sonatype.com/artifact/io.github.kyyana/kogger)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 
 [![Stars](https://img.shields.io/github/stars/kyyana/kogger)](https://github.com/kyyana/kogger/stargazers)
@@ -24,7 +24,7 @@ kotlin {
     sourceSets {
         nativeMain {
             dependencies {
-                implementation("com.thelipe7:kogger:1.0.0")
+                implementation("io.github.kyyana:kogger:1.0.0")
             }
         }
     }
