@@ -157,9 +157,10 @@ logger()  ->  KotlinLogger  ->  Kogger (config + provider)  ->  console (+ file)
 ### File logging (`RollingFileWriter`)
 
 - Writes to `<directory>/latest.log`.
-- Rotates **per day**: when the date changes (or at startup, if `latest.log` is from a
-  previous day), the current file is gzip-archived as
-  `<directory>/yyyy-MM-dd-N.log.gz` (`N` increments for multiple files on the same day).
+- Rotates **per day** and **at startup**: when the date changes, or whenever the process
+  starts and finds a leftover `latest.log` (even one from the same day), the current file
+  is gzip-archived as `<directory>/yyyy-MM-dd-N.log.gz` (`N` increments for multiple files
+  on the same day, e.g. `2026-07-02-1.log.gz`, `2026-07-02-2.log.gz`, ...).
 - Keeps only the most recent `maxArchivedFiles` archives, deleting the oldest.
 - Single-writer only — not thread-safe. It is meant to run behind `AsyncLoggerProvider`,
   whose single worker is the only writer.

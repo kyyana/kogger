@@ -18,15 +18,11 @@ package org.kyyana.kogger.writer
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.addressOf
-import kotlinx.cinterop.alloc
-import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.pointed
-import kotlinx.cinterop.ptr
 import kotlinx.cinterop.toKString
 import kotlinx.cinterop.usePinned
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.todayIn
 import platform.posix.FILE
 import platform.posix.F_OK
@@ -42,17 +38,15 @@ import platform.posix.mkdir
 import platform.posix.opendir
 import platform.posix.readdir
 import platform.posix.remove
-import platform.posix.stat
 import platform.posix.stderr
 import platform.zlib.gzclose
 import platform.zlib.gzopen
 import platform.zlib.gzwrite
 import kotlin.time.Clock
-import kotlin.time.Instant
 
 /**
- * Writes logs to `[directory]/latest.log`, rotating automatically when the day changes (or at
- * startup, if `latest.log` is left over from a previous day).
+ * Writes logs to `[directory]/latest.log`, rotating automatically when the day changes and at
+ * startup, if `latest.log` is left over from a previous run (even one from the same day).
  *
  * Archiving scheme: `[directory]/yyyy-MM-dd-N.log.gz`, where `N` increments if a file for that
  * day already exists. Only the most recent [maxArchivedFiles] archives are kept.
@@ -76,11 +70,8 @@ class RollingFileWriter(
         mkdir(directory, 493u)
         currentDate = Clock.System.todayIn(timeZone)
 
-        // Only archive at startup if latest.log is from a previous day; otherwise keep
-        // appending to it. Uses the file's real date so the archive is named correctly.
-        val existingDate = fileModifiedDate(latestLogPath())
-        if (existingDate != null && existingDate != currentDate) {
-            archiveCurrentLog(existingDate)
+        if (fileExists(latestLogPath())) {
+            archiveCurrentLog(currentDate)
         }
 
         filePointer = openLatestForAppend()
@@ -205,16 +196,6 @@ class RollingFileWriter(
     }
 
     private fun fileExists(path: String): Boolean = access(path, F_OK) == 0
-
-    private fun fileModifiedDate(path: String): LocalDate? =
-        memScoped {
-            val st = alloc<stat>()
-            if (stat(path, st.ptr) != 0) return@memScoped null
-            Instant
-                .fromEpochSeconds(st.st_mtim.tv_sec)
-                .toLocalDateTime(timeZone)
-                .date
-        }
 
     private fun reportError(message: String) {
         fputs("[RollingFileWriter] $message\n", stderr)
