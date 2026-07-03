@@ -24,7 +24,7 @@ kotlin {
     sourceSets {
         nativeMain {
             dependencies {
-                implementation("io.github.kyyana:kogger:1.0.0")
+                implementation("io.github.kyyana:kogger:1.0.1")
             }
         }
     }
